@@ -15,8 +15,6 @@ protocols = {
                 'apply_motion_correction': False,
                 'n_jobs': 8, 
                 'pool_engine': 'process'
-            }
-
             },
             'mountainsort5': {}
         },
