@@ -44,7 +44,14 @@ raw_recordings_list = [raw.remove_channels(remove_channel_ids = bad_channels) fo
 
 recordings_list = [ si.whiten(si.bandpass_filter(si.phase_shift(raw)),dtype="float32") for raw in raw_recordings_list ]
 
-recs_and_motions = [si.correct_motion(rec, folder=f"{deriv_folder}/whitened_motion_{a}", preset="nonrigid_fast_and_accurate", output_motion=True, output_motion_info=True) for a, rec in enumerate(recordings_list)]
+recs_and_motions = [si.correct_motion(rec, preset="nonrigid_fast_and_accurate", output_motion=True, output_motion_info=True) for a, rec in enumerate(recordings_list)]
+
+intersected_channels = set(recs_and_motions[0][0].channel_ids)
+for cm_rec in recs_and_motions[1:]:
+    intersected_channels = intersected_channels.intersection(cm_rec[0].channel_ids)
+intersected_channels = list(intersected_channels)
+
+all_cm_recs_intersect = [cm_rec[0].channel_slice(channel_ids=list(intersected_channels)) for cm_rec in recs_and_motions]
 
 peaks_list = [ rec_and_motion[2]['peaks'] for rec_and_motion in recs_and_motions]
 peak_locations_list = [ rec_and_motion[2]['peak_locations'] for rec_and_motion in recs_and_motions]
@@ -53,7 +60,7 @@ estimate_histogram_kwargs = get_estimate_histogram_kwargs()
 estimate_histogram_kwargs["histogram_type"] = "activity_2d"  # TODO: RENAME
 
 corrected_recordings_list, extra_info = align_sessions(
-    recordings_list,
+    all_cm_recs_intersect,
     peaks_list,
     peak_locations_list,
     estimate_histogram_kwargs=estimate_histogram_kwargs
@@ -62,4 +69,4 @@ corrected_recordings_list, extra_info = align_sessions(
 print("shifts: ", extra_info)
 
 rec = si.concatenate_recordings(corrected_recordings_list)
-rec.save_to_folder(f"{deriv_folder}/full/rec_preprocessing_whitened_corrected")
+rec.save_to_folder(f"{deriv_folder}/full/rec_preprocessing_whitened_corrected_{protocol}")
