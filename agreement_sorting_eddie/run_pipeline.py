@@ -57,17 +57,24 @@ for a, (session_name, path_on_datastore) in enumerate(zip(session_names, paths_o
     script_file_path = stagein_job_name + session_name + ".sh"
     raw_recording_paths.append(
         stagein_data(mouse, day, project_path, path_on_datastore, 
-        job_name = stagein_job_names[a], 
+        job_name = stagein_job_name + session_name,
         script_file_path=script_file_path
     ))
 
 scripts_folder = str(Path(sys.argv[0]).parent)
 
 pp_job_name = f"{mouseday_string}_pp"
-
 run_python_script(
     f"{scripts_folder}/preprocess.py {mouse} {day} {protocol} {project_path}",
     hold_jid = stagein_job_names,
     job_name = pp_job_name,
     cores=8,
 )
+
+for cores, sorter_name in zip([8,8,2], ['kilosort4', 'spykingcircus2', 'mountainsort5']):
+    run_python_script(
+        f"{scripts_folder}/sort.py {mouse} {day} {protocol} {project_path} {sorter_name}",
+        hold_jid = pp_job_name,
+        job_name = f"{mouseday_string}_{sorter_name}",
+        cores=cores,
+    )
