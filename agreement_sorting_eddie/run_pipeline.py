@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 import argparse
 import time
+from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("mouse", help="Mouse number, e.g. 20", type=int)
@@ -42,9 +43,31 @@ session_names = get_session_names(chronologize_paths(paths_on_datastore))
 
 print(f"...which contains sessions: {session_names}")
 
-stagein_job_name = f"M{mouse}_{day}_in_"
+mouseday_string = f"M{mouse}_{day}"
+
+stagein_job_name = f"{mouseday_string}_in_"
+
+stagein_job_names = ""
+for session_name in session_names:
+    stagein_job_names += stagein_job_name + session_name + ","
+stagein_job_names = stagein_job_names[:-1]
 
 raw_recording_paths = []
 for a, (session_name, path_on_datastore) in enumerate(zip(session_names, paths_on_datastore)):
-    raw_recording_paths.append(stagein_data(mouse, day, project_path, path_on_datastore, job_name = stagein_job_name + session_name))
+    script_file_path = stagein_job_name + session_name + ".sh"
+    raw_recording_paths.append(
+        stagein_data(mouse, day, project_path, path_on_datastore, 
+        job_name = stagein_job_names[a], 
+        script_file_path=script_file_path
+    ))
 
+scripts_folder = str(Path(sys.argv[0]).parent)
+
+pp_job_name = f"{mouseday_string}_pp"
+
+run_python_script(
+    f"{scripts_folder}/preprocess.py {mouse} {day} {protocol} {project_path}",
+    hold_jid = stagein_job_names,
+    job_name = pp_job_name,
+    cores=8,
+)
