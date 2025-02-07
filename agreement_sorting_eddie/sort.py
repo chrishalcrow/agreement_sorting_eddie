@@ -21,8 +21,11 @@ sort_folder = f"{deriv_folder}/full/{sorter_name}_sort_{protocol}"
 
 rec = si.read_binary_folder(rec_folder)
 
+si.set_global_job_kwargs(n_jobs=8)
+
 sort=None
 if sorter_name == "mountainsort5":
+    si.set_global_job_kwargs(n_jobs=2)
     import mountainsort5 as ms5
     sort = ms5.sorting_scheme3(
         rec,
@@ -30,18 +33,19 @@ if sorter_name == "mountainsort5":
             block_sorting_parameters=ms5.Scheme2SortingParameters(
                 phase1_detect_channel_radius=100,
                 detect_channel_radius=50,
-                training_duration_sec=30,
+                training_duration_sec=25,
                 phase1_svd_solver='covariance_eigh',
                 training_recording_sampling_mode='uniform'
             ),
             block_duration_sec=10*60
         )
     )
+    sort.save(folder=sort_folder, overwrite=True)
 else:
     sort = si.run_sorter(recording=rec, sorter_name=sorter_name, folder=sort_folder, remove_existing_folder=True, verbose=True, **this_protocol['sorters'][sorter_name])
 
 sa_folder = f"{deriv_folder}/full/{sorter_name}_4"
-sa = si.create_sorting_analyzer(recording=rec, sorting=sort, format="binary_folder", folder=sa_folder)
+sa = si.create_sorting_analyzer(recording=rec, sorting=sort, format="binary_folder", folder=sa_folder, overwrite=True)
 
 sa.compute(extensions_to_compute)
 

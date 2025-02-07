@@ -2,19 +2,17 @@ protocols = {
     1: {
         'sorters': {
             'kilosort4': {
-                'do_CAR': False, 
+                'do_CAR': False,
                 'do_correction': False,
                 'skip_kilosort_preprocessing': True,
                 'use_binary_file': False,
-                'n_jobs': 8,
             },
             'spykingcircus2': {
-                'apply_preprocessing': False, 
-                'apply_whitening': False, 
-                'cache_preprocessing': {}, 
+                'apply_preprocessing': False,
+                'apply_whitening': False,
+                'cache_preprocessing': {},
                 'apply_motion_correction': False,
-                'n_jobs': 8, 
-                'pool_engine': 'process'
+                'job_kwargs': {'n_jobs': 8},
             },
             'mountainsort5': {}
         },
