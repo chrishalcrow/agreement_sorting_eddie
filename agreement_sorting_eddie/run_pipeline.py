@@ -65,7 +65,7 @@ if which_bits[0] == '1':
 scripts_folder = str(Path(sys.argv[0]).parent)
 
 if which_bits[1] == '1':
-    pp_job_name = f"{mouseday_string}_pp"
+    pp_job_name = f"{mouseday_string}_pp_{protocol}"
     run_python_script(
         f"{scripts_folder}/preprocess.py {mouse} {day} {protocol} {project_path}",
         hold_jid = stagein_job_names,
@@ -78,6 +78,6 @@ if which_bits[2] == '1':
         run_python_script(
             f"{scripts_folder}/sort.py {mouse} {day} {protocol} {project_path} {sorter_name}",
             hold_jid = pp_job_name,
-            job_name = f"{mouseday_string}_{sorter_name}",
+            job_name = f"{mouseday_string}_{sorter_name}_{protocol}",
             cores=cores,
         )
