@@ -61,7 +61,7 @@ for group in groups:
     estimate_histogram_kwargs["histogram_type"] = "activity_2d"  # TODO: RENAME
 
     if protocol == 0:
-        recs_to_correct = [rec_and_motion[0] for rec_and_motion in recs_and_motions]
+        recs_to_correct = [pp_rec for pp_rec in pp_recs]
 
     if protocol == 1:
 
