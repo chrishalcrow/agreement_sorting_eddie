@@ -54,21 +54,26 @@ for group in groups:
     # motion correction per shank
     recs_and_motions = [si.correct_motion(rec, preset="nonrigid_fast_and_accurate", output_motion=True, output_motion_info=True) for rec in pp_recs]
     
-    intersected_channels = set(recs_and_motions[0][0].channel_ids)
-    for cm_rec in recs_and_motions[1:]:
-        intersected_channels = intersected_channels.intersection(cm_rec[0].channel_ids)
-    intersected_channels = list(intersected_channels)
-    
-    all_cm_recs_intersect = [cm_rec[0].channel_slice(channel_ids=list(intersected_channels)) for cm_rec in recs_and_motions]
-      
     peaks_list = [ rec_and_motion[2]['peaks'] for rec_and_motion in recs_and_motions]
     peak_locations_list = [ rec_and_motion[2]['peak_locations'] for rec_and_motion in recs_and_motions]
-    
+        
     estimate_histogram_kwargs = get_estimate_histogram_kwargs()
     estimate_histogram_kwargs["histogram_type"] = "activity_2d"  # TODO: RENAME
 
+    if protocol == 0:
+        recs_to_correct = [rec_and_motion[0] for rec_and_motion in recs_and_motions]
+
+    if protocol == 1:
+
+        intersected_channels = set(recs_and_motions[0][0].channel_ids)
+        for cm_rec in recs_and_motions[1:]:
+            intersected_channels = intersected_channels.intersection(cm_rec[0].channel_ids)
+        intersected_channels = list(intersected_channels)
+        
+        recs_to_correct = [cm_rec[0].channel_slice(channel_ids=list(intersected_channels)) for cm_rec in recs_and_motions]
+            
     corrected_recordings_list, extra_info = align_sessions(
-        all_cm_recs_intersect,
+        recs_to_correct,
         peaks_list,
         peak_locations_list,
         estimate_histogram_kwargs=estimate_histogram_kwargs
