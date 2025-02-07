@@ -52,6 +52,15 @@ for session_name in session_names:
     stagein_job_names += stagein_job_name + session_name + ","
 stagein_job_names = stagein_job_names[:-1]
 
+raw_recording_paths = []
+for a, (session_name, path_on_datastore) in enumerate(zip(session_names, paths_on_datastore)):
+    script_file_path = stagein_job_name + session_name + ".sh"
+    raw_recording_paths.append(
+        stagein_data(mouse, day, project_path, path_on_datastore, 
+        job_name = stagein_job_name + session_name,
+        script_file_path=script_file_path
+    ))
+
 scripts_folder = str(Path(sys.argv[0]).parent)
 
 pp_job_name = f"{mouseday_string}_pp"
