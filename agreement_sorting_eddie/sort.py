@@ -42,7 +42,15 @@ if sorter_name == "mountainsort5":
     )
     sort.save(folder=sort_folder, overwrite=True)
 else:
-    sort = si.run_sorter(recording=rec, sorter_name=sorter_name, folder=sort_folder, remove_existing_folder=True, verbose=True, **this_protocol['sorters'][sorter_name])
+    sort = si.run_sorter_by_property(
+        recording=rec, 
+        sorter_name=sorter_name, 
+        folder=sort_folder, 
+        remove_existing_folder=True, 
+        verbose=True, 
+        grouping_property='group',
+        **this_protocol['sorters'][sorter_name]
+    )
 
 sa_folder = f"{deriv_folder}/full/{sorter_name}_4"
 sa = si.create_sorting_analyzer(recording=rec, sorting=sort, format="zarr", folder=sa_folder, overwrite=True)

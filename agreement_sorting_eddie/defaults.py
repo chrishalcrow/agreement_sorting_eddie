@@ -15,6 +15,7 @@ def return_protocols():
                     'cache_preprocessing': {},
                     'apply_motion_correction': False,
                     'job_kwargs': {'n_jobs': 8},
+                    'matching': {'method': 'wobble'}
                 },
                 'mountainsort5': {}
             },
@@ -34,5 +35,5 @@ def return_protocols():
     }
 
     protocols[1] = protocols[0]
-    
+
     return protocols
