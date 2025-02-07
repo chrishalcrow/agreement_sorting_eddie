@@ -13,6 +13,7 @@ parser.add_argument("mouse", help="Mouse number, e.g. 20", type=int)
 parser.add_argument("day", help="Day number, e.g. 14", type=int)
 parser.add_argument("protocol", help="Which sorter protocol to use. Find the details in defaults.py")
 parser.add_argument("project_path", help="Folder containing 'data' and 'derivative' folders")
+parser.add_argument("which_bits", help="Which parts of the pipeline do you want to do? '1111' is all '0011' is sort+copy etc.")
 
 args = parser.parse_args()
 
@@ -20,6 +21,7 @@ mouse = args.mouse
 day = args.day
 protocol = args.protocol
 project_path = args.project_path
+which_bits = list(args.which_bits)
 
 print(f"Doing mouse {mouse}, day {day}...")
 
@@ -52,29 +54,30 @@ for session_name in session_names:
     stagein_job_names += stagein_job_name + session_name + ","
 stagein_job_names = stagein_job_names[:-1]
 
-raw_recording_paths = []
-for a, (session_name, path_on_datastore) in enumerate(zip(session_names, paths_on_datastore)):
-    script_file_path = stagein_job_name + session_name + ".sh"
-    raw_recording_paths.append(
+if which_bits[0] == '1':
+    for a, (session_name, path_on_datastore) in enumerate(zip(session_names, paths_on_datastore)):
+        script_file_path = stagein_job_name + session_name + ".sh"
         stagein_data(mouse, day, project_path, path_on_datastore, 
-        job_name = stagein_job_name + session_name,
-        script_file_path=script_file_path
-    ))
+            job_name = stagein_job_name + session_name,
+            script_file_path=script_file_path
+        )
 
 scripts_folder = str(Path(sys.argv[0]).parent)
 
-pp_job_name = f"{mouseday_string}_pp"
-run_python_script(
-    f"{scripts_folder}/preprocess.py {mouse} {day} {protocol} {project_path}",
-    hold_jid = stagein_job_names,
-    job_name = pp_job_name,
-    cores=8,
-)
-
-for cores, sorter_name in zip([8,8,2], ['kilosort4', 'spykingcircus2', 'mountainsort5']):
+if which_bits[1] == '1':
+    pp_job_name = f"{mouseday_string}_pp"
     run_python_script(
-        f"{scripts_folder}/sort.py {mouse} {day} {protocol} {project_path} {sorter_name}",
-        hold_jid = pp_job_name,
-        job_name = f"{mouseday_string}_{sorter_name}",
-        cores=cores,
+        f"{scripts_folder}/preprocess.py {mouse} {day} {protocol} {project_path}",
+        hold_jid = stagein_job_names,
+        job_name = pp_job_name,
+        cores=8,
     )
+
+if which_bits[2] == '1':
+    for cores, sorter_name in zip([8,8,2], ['kilosort4', 'spykingcircus2', 'mountainsort5']):
+        run_python_script(
+            f"{scripts_folder}/sort.py {mouse} {day} {protocol} {project_path} {sorter_name}",
+            hold_jid = pp_job_name,
+            job_name = f"{mouseday_string}_{sorter_name}",
+            cores=cores,
+        )
