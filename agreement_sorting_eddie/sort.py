@@ -31,9 +31,9 @@ if sorter_name == "mountainsort5":
         rec,
         sorting_parameters=ms5.Scheme3SortingParameters(
             block_sorting_parameters=ms5.Scheme2SortingParameters(
-                phase1_detect_channel_radius=100,
+                phase1_detect_channel_radius=150,
                 detect_channel_radius=50,
-                training_duration_sec=25,
+                training_duration_sec=60,
                 phase1_svd_solver='covariance_eigh',
                 training_recording_sampling_mode='uniform'
             ),
