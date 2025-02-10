@@ -45,6 +45,8 @@ print('bad chans: ', bad_channels)
 
 raw_recordings_list = [raw.remove_channels(remove_channel_ids = bad_channels) for raw in raw_recordings_list]
 
+presets = {0: "nonrigid_fast_and_accurate", 1: "nonrigid_fast_and_accurate", 2: "dredge_fast"}
+
 recs_per_group={}
 for group in groups:
         
@@ -52,7 +54,7 @@ for group in groups:
     pp_recs = [si.whiten(si.bandpass_filter(si.phase_shift(rec_group)),dtype="float32", mode="local") for rec_group in recs_group]
         
     # motion correction per shank
-    recs_and_motions = [si.correct_motion(rec, preset="nonrigid_fast_and_accurate", output_motion=True, output_motion_info=True) for rec in pp_recs]
+    recs_and_motions = [si.correct_motion(rec, preset=presets[protocol], output_motion=True, output_motion_info=True) for rec in pp_recs]
     
     peaks_list = [ rec_and_motion[2]['peaks'] for rec_and_motion in recs_and_motions]
     peak_locations_list = [ rec_and_motion[2]['peak_locations'] for rec_and_motion in recs_and_motions]
