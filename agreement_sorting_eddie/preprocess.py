@@ -49,7 +49,7 @@ recs_per_group={}
 for group in groups:
         
     recs_group = [rec.channel_slice(channel_ids=rec.channel_ids[rec.get_property('group')==group]) for rec in raw_recordings_list]
-    pp_recs = [si.whiten(si.bandpass_filter(si.phase_shift(rec_group)),dtype="float32") for rec_group in recs_group]
+    pp_recs = [si.whiten(si.bandpass_filter(si.phase_shift(rec_group)),dtype="float32", mode="local") for rec_group in recs_group]
         
     # motion correction per shank
     recs_and_motions = [si.correct_motion(rec, preset="nonrigid_fast_and_accurate", output_motion=True, output_motion_info=True) for rec in pp_recs]
@@ -82,4 +82,4 @@ for group in groups:
     recs_per_group[group] = si.concatenate_recordings(corrected_recordings_list)
 
 full_rec = si.aggregate_channels(list(recs_per_group.values()))
-full_rec.save_to_folder(f"{deriv_folder}/full/rec_preprocessing_whitened_corrected_{protocol}")
+full_rec.save_to_folder(f"{deriv_folder}/full/rec_preprocessing_whitened_corrected_{protocol}", overwrite=True)
