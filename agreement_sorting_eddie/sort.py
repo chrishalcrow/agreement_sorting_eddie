@@ -52,7 +52,7 @@ else:
         **this_protocol['sorters'][sorter_name]
     )
 
-sort = si.si.remove_excess_spikes(sorting = sort, recording=rec)
+sort = si.remove_excess_spikes(sorting = sort, recording=rec)
 
 sa_folder = f"{deriv_folder}/full/{sorter_name}_{protocol}"
 sa = si.create_sorting_analyzer(recording=rec, sorting=sort, format="zarr", folder=sa_folder, overwrite=True)
