@@ -15,8 +15,8 @@ def make_text_for_copy_script(mouse, day, protocol, project_path, sorter_name):
     script_text=f"""#!/bin/sh
 #$ -cwd
 #$ -q staging
-#$ -l h_rt=00:59:59
-#$ -N M{mouse}_{day}_out_{sorter_name}_{protocol}
+#$ -l h_rt=00:59:59 -hold_jid M{mouse}_{day}_{sorter_name}_{protocol}
+#$ -N M{mouse}_{day}_out_{sorter_name}_{protocol} 
 
 mkdir /exports/cmvm/datastore/sbms/groups/CDBS_SIDB_storage/NolanLab/ActiveProjects/Chris/Cohort12/derivatives/M{mouse}/D{day}/full/{sorter_name}_{protocol}/
 
