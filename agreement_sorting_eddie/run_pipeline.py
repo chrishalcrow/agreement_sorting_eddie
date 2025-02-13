@@ -101,7 +101,9 @@ if which_bits[2] == '1':
 
 if which_bits[3] == '1':
 
-    script_file_path = f"M{mouse}_{day}_out_{sorter_name}_{protocol}.sh"
+    for sorter_name in ['kilosort4', 'spykingcircus2', 'mountainsort5']:
 
-    script_text = make_text_for_copy_script(mouse, day, protocol, project_path, sorter_name)
-    save_and_run_script(script_text, script_file_path)
+        script_file_path = f"M{mouse}_{day}_out_{sorter_name}_{protocol}.sh"
+
+        script_text = make_text_for_copy_script(mouse, day, protocol, project_path, sorter_name)
+        save_and_run_script(script_text, script_file_path)
