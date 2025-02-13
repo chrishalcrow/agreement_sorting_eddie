@@ -45,7 +45,7 @@ print('bad chans: ', bad_channels)
 
 raw_recordings_list = [raw.remove_channels(remove_channel_ids = bad_channels) for raw in raw_recordings_list]
 
-presets = {0: "nonrigid_fast_and_accurate", 1: "nonrigid_fast_and_accurate", 2: "dredge_fast"}
+presets = {0: "nonrigid_fast_and_accurate", 1: "nonrigid_fast_and_accurate", 2: "dredge_fast", 3:"nonrigid_fast_and_accurate"}
 
 recs_per_group={}
 for group in groups:
@@ -53,35 +53,49 @@ for group in groups:
     recs_group = [rec.channel_slice(channel_ids=rec.channel_ids[rec.get_property('group')==group]) for rec in raw_recordings_list]
     pp_recs = [si.whiten(si.bandpass_filter(si.phase_shift(rec_group)),dtype="float32", mode="local") for rec_group in recs_group]
         
-    # motion correction per shank
-    recs_and_motions = [si.correct_motion(rec, preset=presets[protocol], output_motion=True, output_motion_info=True) for rec in pp_recs]
-    
-    peaks_list = [ rec_and_motion[2]['peaks'] for rec_and_motion in recs_and_motions]
-    peak_locations_list = [ rec_and_motion[2]['peak_locations'] for rec_and_motion in recs_and_motions]
+    if protocol == 3:
+
+        concatenated_recs = si.concatenate_recordings( [pp_rec for pp_rec in pp_recs] )
+        rec_and_motion = si.correct_motion(concatenated_recs, preset=presets[0], output_motion=True, output_motion_info=True)
+        recs_per_group[group] = rec_and_motion[0]
+
+        si.plot_drift_raster_map(
+            peaks = rec_and_motion[2]['peaks'],
+            peak_locations = rec_and_motion[2]['peak_locations'],
+            sampling_frequency=30_000
+        ).figure.savefig(deriv_folder + f"drift_raster_P{protocol}.png")
+
+    else:
+
+        # motion correction per shank
+        recs_and_motions = [si.correct_motion(rec, preset=presets[protocol], output_motion=True, output_motion_info=True) for rec in pp_recs]
         
-    estimate_histogram_kwargs = get_estimate_histogram_kwargs()
-    estimate_histogram_kwargs["histogram_type"] = "activity_2d"  # TODO: RENAME
-
-    if protocol == 0:
-        recs_to_correct = [pp_rec for pp_rec in pp_recs]
-
-    if protocol == 1:
-
-        intersected_channels = set(recs_and_motions[0][0].channel_ids)
-        for cm_rec in recs_and_motions[1:]:
-            intersected_channels = intersected_channels.intersection(cm_rec[0].channel_ids)
-        intersected_channels = list(intersected_channels)
-        
-        recs_to_correct = [cm_rec[0].channel_slice(channel_ids=list(intersected_channels)) for cm_rec in recs_and_motions]
+        peaks_list = [ rec_and_motion[2]['peaks'] for rec_and_motion in recs_and_motions]
+        peak_locations_list = [ rec_and_motion[2]['peak_locations'] for rec_and_motion in recs_and_motions]
             
-    corrected_recordings_list, extra_info = align_sessions(
-        recs_to_correct,
-        peaks_list,
-        peak_locations_list,
-        estimate_histogram_kwargs=estimate_histogram_kwargs
-    )
+        estimate_histogram_kwargs = get_estimate_histogram_kwargs()
+        estimate_histogram_kwargs["histogram_type"] = "activity_2d"  # TODO: RENAME
 
-    recs_per_group[group] = si.concatenate_recordings(corrected_recordings_list)
+        if protocol == 0:
+            recs_to_correct = [pp_rec for pp_rec in pp_recs]
+
+        if protocol == 1:
+
+            intersected_channels = set(recs_and_motions[0][0].channel_ids)
+            for cm_rec in recs_and_motions[1:]:
+                intersected_channels = intersected_channels.intersection(cm_rec[0].channel_ids)
+            intersected_channels = list(intersected_channels)
+            
+            recs_to_correct = [cm_rec[0].channel_slice(channel_ids=list(intersected_channels)) for cm_rec in recs_and_motions]
+                
+        corrected_recordings_list, extra_info = align_sessions(
+            recs_to_correct,
+            peaks_list,
+            peak_locations_list,
+            estimate_histogram_kwargs=estimate_histogram_kwargs
+        )
+
+        recs_per_group[group] = si.concatenate_recordings(corrected_recordings_list)
 
 full_rec = si.aggregate_channels(list(recs_per_group.values()))
 full_rec.save_to_folder(f"{deriv_folder}/full/rec_preprocessing_whitened_corrected_{protocol}", overwrite=True)

@@ -36,5 +36,6 @@ def return_protocols():
 
     protocols[1] = protocols[0]
     protocols[2] = protocols[0]
+    protocols[3] = protocols[0]
 
     return protocols
