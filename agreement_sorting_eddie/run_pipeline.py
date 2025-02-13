@@ -25,14 +25,6 @@ cp -rn {project_path}derivatives/M{mouse}/D{day}/full/{sorter_name}_sa_{protocol
 
     return script_text
 
-
-mouse = int(sys.argv[1])
-day = int(sys.argv[2])
-protocol = int(sys.argv[3])
-project_path = sys.argv[4]
-sorter_name = sys.argv[5]
-
-
 parser = argparse.ArgumentParser()
 parser.add_argument("mouse", help="Mouse number, e.g. 20", type=int)
 parser.add_argument("day", help="Day number, e.g. 14", type=int)
