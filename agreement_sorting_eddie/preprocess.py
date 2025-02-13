@@ -63,7 +63,7 @@ for group in groups:
             peaks = rec_and_motion[2]['peaks'],
             peak_locations = rec_and_motion[2]['peak_locations'],
             sampling_frequency=30_000
-        ).figure.savefig(deriv_folder + f"drift_raster_P{protocol}.png")
+        ).figure.savefig(deriv_folder + f"/drift_raster_P{protocol}_G{group}.png")
 
     else:
 

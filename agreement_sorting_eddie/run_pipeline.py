@@ -1,12 +1,37 @@
 import sys
 import os
-from Elrond.Helpers.create_eddie_scripts import stagein_data, run_python_script, run_stageout_script, get_filepaths_on_datastore
+from Elrond.Helpers.create_eddie_scripts import stagein_data, run_python_script, run_stageout_script, get_filepaths_on_datastore, save_and_run_script
 from Elrond.Helpers.upload_download import get_session_names, chronologize_paths
+
 from pathlib import Path
 import numpy as np
 import argparse
 import time
 from pathlib import Path
+
+
+def make_text_for_copy_script(mouse, day, protocol, project_path, sorter_name):
+
+    script_text=f"""#!/bin/sh
+#$ -cwd
+#$ -q staging
+#$ -l h_rt=00:59:59
+#$ -N M{mouse}_{day}_out_{sorter_name}_{protocol}
+
+mkdir /exports/cmvm/datastore/sbms/groups/CDBS_SIDB_storage/NolanLab/ActiveProjects/Chris/Cohort12/derivatives/M{mouse}/D{day}/full/{sorter_name}_{protocol}/
+
+cp -rn {project_path}derivatives/M{mouse}/D{day}/full/{sorter_name}_{protocol}.zarr/ /exports/cmvm/datastore/sbms/groups/CDBS_SIDB_storage/NolanLab/ActiveProjects/Chris/Cohort12/derivatives/M{mouse}/D{day}/full/{sorter_name}_{protocol}/
+cp -rn {project_path}derivatives/M{mouse}/D{day}/full/{sorter_name}_sa_{protocol}_report/ /exports/cmvm/datastore/sbms/groups/CDBS_SIDB_storage/NolanLab/ActiveProjects/Chris/Cohort12/derivatives/M{mouse}/D{day}/full/{sorter_name}_{protocol}/"""
+
+    return script_text
+
+
+mouse = int(sys.argv[1])
+day = int(sys.argv[2])
+protocol = int(sys.argv[3])
+project_path = sys.argv[4]
+sorter_name = sys.argv[5]
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("mouse", help="Mouse number, e.g. 20", type=int)
@@ -81,3 +106,10 @@ if which_bits[2] == '1':
             job_name = f"{mouseday_string}_{sorter_name}_{protocol}",
             cores=cores,
         )
+
+if which_bits[3] == '1':
+
+    script_file_path = f"M{mouse}_{day}_out_{sorter_name}_{protocol}.sh"
+
+    script_text = make_text_for_copy_script(mouse, day, protocol, project_path, sorter_name)
+    save_and_run_script(script_text, script_file_path)
