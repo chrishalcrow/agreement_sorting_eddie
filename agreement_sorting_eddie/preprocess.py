@@ -33,6 +33,7 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
 
     data_folder = project_path + "data/"
     rec_paths = get_chronologized_recording_paths(data_folder, mouse, day)
+    print(f"Found recordings: {rec_paths}")
     session_names = get_session_names(rec_paths)
 
     if mouse <= 21:
