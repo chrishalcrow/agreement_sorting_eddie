@@ -2,8 +2,8 @@ import sys
 import os
 from Elrond.Helpers.upload_download import get_session_names, chronologize_paths, get_chronologized_recording_paths
 
-from .preprocess import run_preprocess
-from .sort import run_sort
+from preprocess import run_preprocess
+from sort import run_sort
 
 from pathlib import Path
 import numpy as np
