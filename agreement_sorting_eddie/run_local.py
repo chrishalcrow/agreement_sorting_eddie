@@ -20,7 +20,7 @@ if __name__ == "__main__":
     parser.add_argument("protocol", help="Protocol for preprocessing: e.g. 3. Protocols can be found in defaults.py")
     parser.add_argument("project_path", help="Folder containing 'data' and 'derivative' folders")
     parser.add_argument("--sorter_name", help="If you want to run a specific sorter for this protocol, e.g. kilosort4")
-    parser.add_argument("--do_preprocessing", help="Do the preprocessing? No need if already done.", type=bool)
+    parser.add_argument("--skip_preprocessing", help="Skip the preprocessing?", type=bool)
 
     args = parser.parse_args()
 
@@ -34,6 +34,8 @@ if __name__ == "__main__":
         sorter_name = args.sorter_name
     else:
         sorter_name = None
+
+
 
     protocols = return_protocols()
     this_protocol = protocols[int(protocol)]
@@ -55,7 +57,7 @@ if __name__ == "__main__":
 
     print(f"Going to sort with {sorter_names}")
 
-    if args.do_preprocessing:
+    if args.skip_preprocessing is False:
         run_preprocess(mouse, day, protocol, project_path)
 
     for sorter_name in sorter_names:

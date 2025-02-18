@@ -41,7 +41,7 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
 
     groups = np.unique(np.array(raw_recordings_list[0].get_property('group')))
     if len(groups) == 4:
-        mc_preset = 'rigid'
+        mc_preset = 'rigid_fast'
     else:
         mc_preset = this_protocol['motion_correction']
 
