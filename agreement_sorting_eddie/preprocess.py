@@ -74,7 +74,7 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
         else:
 
             # motion correction per shank
-            recs_and_motions = [si.correct_motion(rec, preset=presets[protocol], output_motion=True, output_motion_info=True) for rec in pp_recs]
+            recs_and_motions = [si.correct_motion(rec, preset=this_protocol['motion_correction'], output_motion=True, output_motion_info=True) for rec in pp_recs]
             
             peaks_list = [ rec_and_motion[2]['peaks'] for rec_and_motion in recs_and_motions]
             peak_locations_list = [ rec_and_motion[2]['peak_locations'] for rec_and_motion in recs_and_motions]
