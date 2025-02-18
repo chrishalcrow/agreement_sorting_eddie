@@ -5,10 +5,10 @@ import sys
 from defaults import return_protocols
 from pathlib import Path
 
-from spikeinterface.preprocessing.inter_session_alignment.session_alignment import (
-    get_estimate_histogram_kwargs,
-    align_sessions,
-)
+# from spikeinterface.preprocessing.inter_session_alignment.session_alignment import (
+#     get_estimate_histogram_kwargs,
+#     align_sessions,
+# )
 
 
 
