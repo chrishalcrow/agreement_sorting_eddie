@@ -35,13 +35,6 @@ if __name__ == "__main__":
     else:
         sorter_name = None
 
-    
-        sorter_name = args.sorter_name
-    else:
-        sorter_name = None
-
-    do_preprocessing = args.
-
     protocols = return_protocols()
     this_protocol = protocols[int(protocol)]
 
