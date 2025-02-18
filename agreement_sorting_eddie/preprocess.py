@@ -83,27 +83,27 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
             peaks_list = [ rec_and_motion[2]['peaks'] for rec_and_motion in recs_and_motions]
             peak_locations_list = [ rec_and_motion[2]['peak_locations'] for rec_and_motion in recs_and_motions]
                 
-            estimate_histogram_kwargs = get_estimate_histogram_kwargs()
-            estimate_histogram_kwargs["histogram_type"] = "activity_2d"  # TODO: RENAME
+            # estimate_histogram_kwargs = get_estimate_histogram_kwargs()
+            # estimate_histogram_kwargs["histogram_type"] = "activity_2d"  # TODO: RENAME
 
             if protocol == 0:
                 recs_to_correct = [pp_rec for pp_rec in pp_recs]
 
-            if protocol == 1:
+            # if protocol == 1:
 
-                intersected_channels = set(recs_and_motions[0][0].channel_ids)
-                for cm_rec in recs_and_motions[1:]:
-                    intersected_channels = intersected_channels.intersection(cm_rec[0].channel_ids)
-                intersected_channels = list(intersected_channels)
+            #     intersected_channels = set(recs_and_motions[0][0].channel_ids)
+            #     for cm_rec in recs_and_motions[1:]:
+            #         intersected_channels = intersected_channels.intersection(cm_rec[0].channel_ids)
+            #     intersected_channels = list(intersected_channels)
                 
-                recs_to_correct = [cm_rec[0].channel_slice(channel_ids=list(intersected_channels)) for cm_rec in recs_and_motions]
+            #     recs_to_correct = [cm_rec[0].channel_slice(channel_ids=list(intersected_channels)) for cm_rec in recs_and_motions]
                     
-            corrected_recordings_list, extra_info = align_sessions(
-                recs_to_correct,
-                peaks_list,
-                peak_locations_list,
-                estimate_histogram_kwargs=estimate_histogram_kwargs
-            )
+            # corrected_recordings_list, extra_info = align_sessions(
+            #     recs_to_correct,
+            #     peaks_list,
+            #     peak_locations_list,
+            #     estimate_histogram_kwargs=estimate_histogram_kwargs
+            # )
 
             recs_per_group[group] = si.concatenate_recordings(corrected_recordings_list)
 
