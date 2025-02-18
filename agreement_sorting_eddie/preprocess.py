@@ -21,7 +21,6 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
 
     protocols = return_protocols()
     this_protocol = protocols[int(protocol)]
-    presets = {0: "nonrigid_fast_and_accurate", 1: "nonrigid_fast_and_accurate", 2: "dredge_fast", 3:"nonrigid_fast_and_accurate"}
 
     deriv_folder = project_path + f"derivatives/M{mouse}/D{day}"
     Path(deriv_folder).mkdir(exist_ok=True, parents=True)
@@ -33,7 +32,6 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
 
     data_folder = project_path + "data/"
     rec_paths = get_chronologized_recording_paths(data_folder, mouse, day)
-    print(f"Found recordings: {rec_paths}")
     session_names = get_session_names(rec_paths)
 
     if mouse <= 21:
@@ -64,7 +62,7 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
         if protocol == 3:
 
             concatenated_recs = si.concatenate_recordings( [pp_rec for pp_rec in pp_recs] )
-            rec_and_motion = si.correct_motion(concatenated_recs, preset=presets[0], output_motion=True, output_motion_info=True)
+            rec_and_motion = si.correct_motion(concatenated_recs, preset=this_protocol['motion_correction'], output_motion=True, output_motion_info=True)
             recs_per_group[group] = rec_and_motion[0]
 
             si.plot_drift_raster_map(

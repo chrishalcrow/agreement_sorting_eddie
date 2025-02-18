@@ -9,7 +9,6 @@ from pathlib import Path
 import numpy as np
 import argparse
 import time
-from pathlib import Path
 import argparse
 
 if __name__ == "__main__":
@@ -33,6 +32,7 @@ if __name__ == "__main__":
     Path(data_path).mkdir(exist_ok=True)
 
     chronologized_recording_paths = get_chronologized_recording_paths(data_path, mouse, day)
+    print(f"Found recordings: {chronologized_recording_paths}")
     session_names = get_session_names(chronologized_recording_paths)
 
     print(f"...which contains sessions: {session_names}")
