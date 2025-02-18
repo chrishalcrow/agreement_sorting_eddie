@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
 
 
-    if args.do_preprocessing
+    if args.do_preprocessing:
         print("Doing preprocessing")
         run_preprocess(mouse, day, protocol, project_path)
 
