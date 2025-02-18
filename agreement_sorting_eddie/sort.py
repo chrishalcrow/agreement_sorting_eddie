@@ -1,6 +1,7 @@
 import sys
 import spikeinterface.full as si
 from defaults import return_protocols
+from pathlib import Path
 
 # mouse = int(sys.argv[1])
 # day = int(sys.argv[2])
