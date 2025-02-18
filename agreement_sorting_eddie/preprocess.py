@@ -3,6 +3,7 @@ import spikeinterface.full as si
 from Elrond.Helpers import get_chronologized_recording_paths, get_session_names
 import sys
 from defaults import return_protocols
+from pathlib import Path
 
 from spikeinterface.preprocessing.inter_session_alignment.session_alignment import (
     get_estimate_histogram_kwargs,
