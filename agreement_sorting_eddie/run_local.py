@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     print(f"Going to sort with {sorter_names}")
 
-    if args.skip_preprocessing is False:
+    if not args.skip_preprocessing:
         run_preprocess(mouse, day, protocol, project_path)
 
     for sorter_name in sorter_names:
