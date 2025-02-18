@@ -20,8 +20,6 @@ def run_sort(mouse, day, protocol, project_path, sorter_name):
     rec_folder = f"{deriv_folder}/full/rec_preprocessing_whitened_corrected_{protocol}"
     sort_folder = f"{deriv_folder}/full/{sorter_name}_sort_{protocol}"
 
-    Path(deriv_folder).mkdir(exist_ok=True, parents=True)
-    Path(rec_folder).mkdir(exist_ok=True, parents=True)
     Path(sort_folder).mkdir(exist_ok=True, parents=True)
 
     rec = si.read_binary_folder(rec_folder)
