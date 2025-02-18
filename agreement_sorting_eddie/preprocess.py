@@ -40,6 +40,10 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
         raw_recordings_list = [si.read_openephys(rec_path) for rec_path in rec_paths]
 
     groups = np.unique(np.array(raw_recordings_list[0].get_property('group')))
+    if len(groups) == 4:
+        mc_preset = 'rigid'
+    else:
+        mc_preset = this_protocol['motion_correction']
 
     bad_channels = []
     for raw_recording in raw_recordings_list:
@@ -62,7 +66,7 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
         if protocol == 3:
 
             concatenated_recs = si.concatenate_recordings( [pp_rec for pp_rec in pp_recs] )
-            rec_and_motion = si.correct_motion(concatenated_recs, preset=this_protocol['motion_correction'], output_motion=True, output_motion_info=True)
+            rec_and_motion = si.correct_motion(concatenated_recs, preset=mc_preset, output_motion=True, output_motion_info=True)
             recs_per_group[group] = rec_and_motion[0]
 
             si.plot_drift_raster_map(
@@ -74,7 +78,7 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
         else:
 
             # motion correction per shank
-            recs_and_motions = [si.correct_motion(rec, preset=this_protocol['motion_correction'], output_motion=True, output_motion_info=True) for rec in pp_recs]
+            recs_and_motions = [si.correct_motion(rec, preset=mc_preset, output_motion=True, output_motion_info=True) for rec in pp_recs]
             
             peaks_list = [ rec_and_motion[2]['peaks'] for rec_and_motion in recs_and_motions]
             peak_locations_list = [ rec_and_motion[2]['peak_locations'] for rec_and_motion in recs_and_motions]
