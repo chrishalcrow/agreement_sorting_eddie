@@ -32,7 +32,7 @@ if __name__ == "__main__":
     data_path = project_path + f"data/M{mouse}_D{day}"
     Path(data_path).mkdir(exist_ok=True)
 
-    chronologized_recording_paths = get_chronologized_recording_paths(data_path)
+    chronologized_recording_paths = get_chronologized_recording_paths(data_path, mouse, day)
     session_names = get_session_names(chronologized_recording_paths)
 
     print(f"...which contains sessions: {session_names}")
