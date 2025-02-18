@@ -11,7 +11,7 @@ def return_protocols():
                 },
                 'spykingcircus2': {
                     'apply_preprocessing': False,
-                    'apply_whitening': False,
+                    'whitening': {},
                     'cache_preprocessing': {},
                     'apply_motion_correction': False,
                     'job_kwargs': {'n_jobs': 8},
