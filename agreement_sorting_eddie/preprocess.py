@@ -26,7 +26,7 @@ def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
     deriv_folder = project_path + f"derivatives/M{mouse}/D{day}"
     Path(deriv_folder).mkdir(exist_ok=True, parents=True)
 
-    si.set_global_job_kwargs(n_jobs=n_jobs, pool_engine="process")
+    si.set_global_job_kwargs(n_jobs=n_jobs)
 
     mouse = int(mouse)
     day = int(day)
