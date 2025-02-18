@@ -38,4 +38,9 @@ def return_protocols():
     protocols[2] = protocols[0]
     protocols[3] = protocols[0]
 
+    protocols[0]['motion_correction'] = 'nonrigid_fast_and_accurate'
+    protocols[1]['motion_correction'] = 'nonrigid_fast_and_accurate'
+    protocols[2]['motion_correction'] = 'dredge_fast'
+    protocols[3]['motion_correction'] = 'nonrigid_fast_and_accurate'
+
     return protocols
