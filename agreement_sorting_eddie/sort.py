@@ -2,11 +2,11 @@ import sys
 import spikeinterface.full as si
 from defaults import return_protocols
 
-mouse = int(sys.argv[1])
-day = int(sys.argv[2])
-protocol = int(sys.argv[3])
-project_path = sys.argv[4]
-sorter_name = sys.argv[5]
+# mouse = int(sys.argv[1])
+# day = int(sys.argv[2])
+# protocol = int(sys.argv[3])
+# project_path = sys.argv[4]
+# sorter_name = sys.argv[5]
 
 def run_sort(mouse, day, protocol, project_path, sorter_name):
 

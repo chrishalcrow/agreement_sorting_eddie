@@ -10,10 +10,10 @@ from spikeinterface.preprocessing.inter_session_alignment.session_alignment impo
 
 
 
-mouse = sys.argv[1]
-day = sys.argv[2]
-protocol = int(sys.argv[3])
-project_path = sys.argv[4]
+# mouse = sys.argv[1]
+# day = sys.argv[2]
+# protocol = int(sys.argv[3])
+# project_path = sys.argv[4]
 
 def run_preprocess(mouse, day, protocol, project_path, n_jobs=8):
 
